@@ -229,7 +229,7 @@ html, body { overflow-x: hidden; }
 
 .h2 {
   font-family: var(--font-display);
-  font-size: clamp(28px, 4vw, 40px);
+  font-size: clamp(26px, 5vw, 40px);
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -.02em
@@ -494,6 +494,56 @@ header.solid {
 .nav-links a:hover {
   color: var(--white);
   background: var(--white-05)
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mobile-toggle {
+  display: none;
+  background: var(--white-05);
+  border: 1px solid var(--white-10);
+  color: var(--white);
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+@media(max-width: 991px) {
+  .mobile-toggle {
+    display: flex;
+  }
+
+  .nav-links {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 280px;
+    height: 100vh;
+    background: rgba(3, 13, 26, 0.98);
+    backdrop-filter: blur(20px);
+    flex-direction: column;
+    padding: 120px 40px;
+    transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 999;
+    border-left: 1px solid var(--glass-b);
+  }
+
+  .nav-links.active {
+    right: 0;
+  }
+
+  .nav-links a {
+    font-size: 18px;
+    padding: 15px 0;
+    width: 100%;
+    display: block;
+    border-bottom: 1px solid var(--white-05);
+  }
 }
 
 /* ════════════════════════════════════════
@@ -1088,6 +1138,26 @@ footer {
   .foot-about .logo-img {
     height: 50px;
   }
+
+  .nav {
+    height: 70px;
+  }
+
+  .nav-links {
+    padding-top: 100px;
+  }
+
+  .logo-img {
+    height: 60px;
+  }
+
+  .ticker-wrap {
+    top: 70px;
+  }
+
+  .hero {
+    padding-top: 120px;
+  }
 }
 
 #demo .wrap {
@@ -1111,5 +1181,43 @@ footer {
 
   .traders-card {
     padding: 30px 20px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
+
+@media(max-width: 480px) {
+  .hero-cta {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .hero-cta .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .h1 {
+    font-size: 32px;
+  }
+
+  .sec {
+    padding: 50px 0;
+  }
+
+  .traders-card {
+    padding: 20px 15px !important;
+  }
+
+  .hero-chips {
+    gap: 8px;
+  }
+  
+  .chip {
+    padding: 5px 10px;
+    font-size: 11px;
   }
 }

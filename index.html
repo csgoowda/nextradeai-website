@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexTradeAI | Elite AI Trading Robot</title>
+    <meta name="description" content="Unlock the power of AI-driven automated trading for Gold, Bitcoin, and FX markets on MT4/MT5. Professional execution for every trader.">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <!-- UI Elements -->
+    <div id="cursor"></div>
+    <div id="cursor-ring"></div>
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Ticker Section -->
+    <div class="ticker-wrap">
+        <div class="ticker-track" id="tickerTrack"></div>
+    </div>
+
+    <!-- Navigation -->
+    <header id="hdr">
+        <div class="nav">
+            <a href="#" class="logo">
+                <img src="assets/images/logo.svg" alt="NexTradeAI Logo" class="logo-img">
+            </a>
+            <ul class="nav-links">
+                <li><a href="#performance">Performance</a></li>
+                <li><a href="#howitworks">How It Works</a></li>
+                <li><a href="#why">Features</a></li>
+                <li><a href="#strategy">Strategy</a></li>
+                <li><a href="#demo">Free Demo</a></li>
+                <li><a href="#faq">FAQ</a></li>
+            </ul>
+            <div class="nav-right">
+                <a href="#demo" class="btn btn-glow btn-sm">Try For Free</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="scan-line"></div>
+        <div class="blob blob-g" style="width:600px;height:600px;top:-100px;right:-100px;"></div>
+        
+        <div class="wrap">
+            <div class="hero-grid grid-2">
+                <div class="hero-content reveal">
+                    <div class="eyebrow">Advanced AI Algorithm</div>
+                    <h1 class="h1">Transform Your <span class="grad">Trading Performance</span> With Our AI Robot</h1>
+                    <p class="hero-sub">Automate your trades with our specialized EA engines for <strong>Gold</strong>, <strong>Bitcoin</strong>, and <strong>FX Pairs</strong>. Professional grade execution on MT4 and MT5.</p>
+                    <div class="hero-cta">
+                        <a href="#buy" class="btn btn-glow btn-lg">🚀 Buy Now</a>
+                        <a href="#howitworks" class="btn btn-ghost btn-lg">See How It Works</a>
+                    </div>
+                    <div class="hero-chips">
+                        <div class="chip">XAUUSD · Gold</div>
+                        <div class="chip">BTCUSD · Bitcoin</div>
+                        <div class="chip">MT4 / MT5</div>
+                    </div>
+                </div>
+                <div class="hero-panel reveal">
+                    <div class="hero-3d-scene">
+                        <div class="hologram-ring ring-1"></div>
+                        <div class="hologram-ring ring-2"></div>
+                        <div class="hologram-base"></div>
+                        <div class="model-container">
+                            <img src="assets/images/hero_ai_robot.png" alt="NexTradeAI 3D Model" class="hero-model">
+                            <div class="model-overlay"></div>
+                        </div>
+                        <div class="data-particles"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Performance Section -->
+    <section class="sec" id="performance">
+        <div class="wrap">
+            <div class="perf-layout grid-2">
+                <div>
+                    <div class="eyebrow reveal">Track Record</div>
+                    <h2 class="h2 reveal">Proven <span class="grad-green">Performance</span></h2>
+                    <p class="muted reveal">Our AI algorithm delivers consistent, verified returns across Gold and Bitcoin markets.</p>
+                    <div class="stats-grid reveal">
+                        <div class="stat-tile">
+                            <div class="st-num">+84%</div>
+                            <div class="st-lbl">Average Annual Return</div>
+                        </div>
+                        <div class="stat-tile">
+                            <div class="st-num">94.1%</div>
+                            <div class="st-lbl">Signal Accuracy</div>
+                        </div>
+                    </div>
+                    <div class="traders-card reveal">
+                        <div class="t-num" id="counterNum">0</div>
+                        <p class="st-lbl">Active clients profiting with us daily</p>
+                    </div>
+                </div>
+                <div class="perf-panel reveal">
+                    <div class="glass" style="padding: 10px;">
+                        <img src="assets/images/performance.png" alt="Performance Data" style="border-radius:15px; width:100%;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="sec" id="howitworks">
+        <div class="wrap">
+            <div style="text-align:center; margin-bottom:50px;">
+                <div class="eyebrow reveal">The Mechanics</div>
+                <h2 class="h2 reveal">How Does NexTradeAI <span class="grad">Work?</span></h2>
+            </div>
+            <div class="feat-grid">
+                <div class="feat-card reveal">
+                    <h3>01. AI Market Analysis</h3>
+                    <p>Scanning Gold and Bitcoin markets 24/7 to identify high-probability patterns.</p>
+                </div>
+                <div class="feat-card reveal">
+                    <h3>02. Real Time Signals</h3>
+                    <p>Signals generated with precise entry, stop loss, and take profit automatically.</p>
+                </div>
+                <div class="feat-card reveal">
+                    <h3>03. Automated Execution</h3>
+                    <p>Instant execution on MT4/MT5 platforms, eliminating all emotional bias.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Traders Choose -->
+    <section class="sec" id="why">
+        <div class="wrap">
+            <div style="text-align:center; margin-bottom:50px;">
+                <h2 class="h2 reveal">Why Traders Choose <span class="grad">NexTradeAI</span></h2>
+            </div>
+            <div class="feat-grid">
+                <div class="feat-card reveal">
+                    <i data-lucide="verified" class="green-text"></i>
+                    <h3>Verified Performance</h3>
+                    <p>Transparent trading results tracked via MyFxbook for complete peace of mind.</p>
+                </div>
+                <div class="feat-card reveal">
+                    <i data-lucide="shield-check" class="green-text"></i>
+                    <h3>High Returns, Low Risk</h3>
+                    <p>Sophisticated ratios designed to maximize growth while protecting your deposit.</p>
+                </div>
+                <div class="feat-card reveal">
+                    <i data-lucide="zap" class="green-text"></i>
+                    <h3>Simple to Use</h3>
+                    <p>One-click installation process. No trading experience required.</p>
+                </div>
+                <div class="feat-card reveal">
+                    <i data-lucide="server" class="green-text"></i>
+                    <h3>Free Forex VPS</h3>
+                    <p>Complimentary high-speed VPS ensuring your AI bot runs 24/7 with zero lag.</p>
+                </div>
+                <div class="feat-card reveal">
+                    <i data-lucide="power" class="green-text"></i>
+                    <h3>Account Kill Switch</h3>
+                    <p>Advanced protection that halts trading if specific loss thresholds are reached.</p>
+                </div>
+                <div class="feat-card reveal">
+                    <i data-lucide="cpu" class="green-text"></i>
+                    <h3>Fully Automated</h3>
+                    <p>A complete hands-free system. Let the AI handle the workload.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Strategy Section -->
+    <section class="sec" id="strategy">
+        <div class="wrap">
+            <div class="perf-layout grid-2">
+                <div class="hero-panel reveal">
+                    <div class="glass strategy-slideshow" style="padding: 10px;">
+                        <img src="assets/images/strategy.png" alt="Strategy Report" class="slide active">
+                        <img src="assets/images/strategy_2.png" alt="Strategy Report 2" class="slide">
+                        <img src="assets/images/strategy_3.png" alt="Strategy Report 3" class="slide">
+                        <img src="assets/images/strategy_4.png" alt="Strategy Report 4" class="slide">
+                    </div>
+                </div>
+                <div class="reveal">
+                    <h2 class="h2">Outperform With The <span class="grad">Latest AI Algorithm</span></h2>
+                    <p class="muted">Our strategy tester report shows 5+ years of verified performance.</p>
+                    <a href="#" class="btn btn-outline-gBtn" style="margin-top:20px; color: var(--green); border:1px solid var(--green); padding: 10px 20px; border-radius: 30px;">Check Profit Videos</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Free Demo Section -->
+    <section class="sec" id="demo">
+        <div class="wrap">
+            <div class="traders-card reveal">
+                <div class="demo-layout">
+                    <div>
+                        <h2 class="h2">7 Days <span class="grad">Free Demo</span></h2>
+                        <p class="muted">Try the NexTradeAI trading bot completely free before purchasing.</p>
+                    </div>
+                    <div class="demo-form-col">
+                        <div class="demo-form-inner">
+                            <div class="dash-shell" style="padding: 30px; background: rgba(0,0,0,0.3);">
+                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                    <input type="text" placeholder="Full Name" style="background: rgba(255,255,255,0.05); border:1px solid var(--white-10); padding: 12px; border-radius: 8px; color: white;">
+                                    <input type="email" placeholder="Email Address" style="background: rgba(255,255,255,0.05); border:1px solid var(--white-10); padding: 12px; border-radius: 8px; color: white;">
+                                    <input type="text" placeholder="Country" style="background: rgba(255,255,255,0.05); border:1px solid var(--white-10); padding: 12px; border-radius: 8px; color: white;">
+                                    <input type="text" placeholder="MT5 Account #" style="background: rgba(255,255,255,0.05); border:1px solid var(--white-10); padding: 12px; border-radius: 8px; color: white;">
+                                </div>
+                                <button class="btn btn-glow" id="trialBtn" style="width:100%; margin-top:20px;" onclick="submitTrial()">Start My Free Trial</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How To Start Section -->
+    <section class="sec" id="start">
+        <div class="wrap">
+            <div style="text-align:center; margin-bottom:50px;">
+                <h2 class="h2 reveal">How To Start With <span class="grad">NexTradeAI</span></h2>
+            </div>
+            <div class="start-grid">
+                <div class="s-card reveal">
+                    <div class="s-num">1</div>
+                    <h3>Account</h3>
+                    <p>Open MT4 or MT5 trading account with your preferred broker.</p>
+                </div>
+                <div class="s-card reveal">
+                    <div class="s-num">2</div>
+                    <h3>Download</h3>
+                    <p>Download the NexTradeAI trading robot from your dashboard.</p>
+                </div>
+                <div class="s-card reveal">
+                    <div class="s-num">3</div>
+                    <h3>Install</h3>
+                    <p>Install the robot on your MT4 or MT5 desktop platform.</p>
+                </div>
+                <div class="s-card reveal">
+                    <div class="s-num">4</div>
+                    <h3>Activate</h3>
+                    <p>Activate your license key and start automated trading.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="sec" id="faq">
+        <div class="wrap">
+            <div style="text-align:center; margin-bottom:50px;">
+                <h2 class="h2 reveal">Frequently Asked <span class="grad">Questions</span></h2>
+            </div>
+            <div class="faq-wrap">
+                <div class="faq reveal" onclick="toggleFAQ(this)">
+                    <div class="faq-q">How do I trust that your robot makes money? <span>+</span></div>
+                    <div class="faq-a"><p>All results are third-party verified on MyFXBook with live access. You can view every trade and drawdown in real-time.</p></div>
+                </div>
+                <div class="faq reveal" onclick="toggleFAQ(this)">
+                    <div class="faq-q">Do I need forex experience before using the robot? <span>+</span></div>
+                    <div class="faq-a"><p>No experience needed. The bot is fully automated and designed for both beginners and professionals.</p></div>
+                </div>
+                <div class="faq reveal" onclick="toggleFAQ(this)">
+                    <div class="faq-q">Can I use my own broker? <span>+</span></div>
+                    <div class="faq-a"><p>Yes, our bot works with any broker supporting MT4 or MT5 platforms.</p></div>
+                </div>
+                <div class="faq reveal" onclick="toggleFAQ(this)">
+                    <div class="faq-q">What monthly gain can I expect? <span>+</span></div>
+                    <div class="faq-a"><p>Typically between 15% to 100% depending on market volatility and risk settings.</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="wrap">
+            <div class="foot-grid">
+                <div class="foot-about">
+                    <a href="#" class="logo">
+                        <img src="assets/images/logo.svg" alt="NexTradeAI Logo" class="logo-img">
+                    </a>
+                    <p>Premium AI trading solutions for Gold and Bitcoin markets. Elevating your financial performance through automation.</p>
+                </div>
+                <div class="foot-col">
+                    <h4>Platform</h4>
+                    <a href="#">MetaTrader 4</a>
+                    <a href="#">MetaTrader 5</a>
+                    <a href="#">Free Demo</a>
+                </div>
+                <div class="foot-col">
+                    <h4>Support</h4>
+                    <a href="#">Telegram</a>
+                    <a href="#">Installation Guide</a>
+                    <a href="#">Contact Us</a>
+                </div>
+                <div class="foot-col">
+                    <h4>Legal</h4>
+                    <a href="#">Terms of Use</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Risk Disclosure</a>
+                </div>
+            </div>
+            <div class="foot-copy">
+                © 2024 NexTradeAI. All rights reserved. Past performance is not indicative of future results.
+            </div>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

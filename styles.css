@@ -56,6 +56,7 @@ body {
   cursor: none;
   margin: 0;
   padding: 0;
+  width: 100%;
 }
 
 img {
@@ -513,38 +514,7 @@ header.solid {
   z-index: 1001;
 }
 
-@media(max-width: 991px) {
-  .mobile-toggle {
-    display: flex;
-  }
-
-  .nav-links {
-    position: fixed;
-    top: 0;
-    right: -100%;
-    width: 280px;
-    height: 100vh;
-    background: rgba(3, 13, 26, 0.98);
-    backdrop-filter: blur(20px);
-    flex-direction: column;
-    padding: 120px 40px;
-    transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    z-index: 999;
-    border-left: 1px solid var(--glass-b);
-  }
-
-  .nav-links.active {
-    right: 0;
-  }
-
-  .nav-links a {
-    font-size: 18px;
-    padding: 15px 0;
-    width: 100%;
-    display: block;
-    border-bottom: 1px solid var(--white-05);
-  }
-}
+/* Mobile Navigation refined in Responsive section below */
 
 /* ════════════════════════════════════════
    HERO
@@ -1058,20 +1028,22 @@ footer {
   to { background-position: 100px 100px; }
 }
 
-@media(max-width: 768px) {
-  .hero-3d-scene { aspect-ratio: auto; min-height: 400px; }
-  .hologram-ring { display: none; }
-}
+/* ════════════════════════════════════════
+   RESPONSIVE DESIGN (Steps 1-9)
+   ════════════════════════════════════════ */
 
-@media(max-width:1024px) {
-
+/* Step 1 — Tablet Breakpoint */
+@media (max-width: 1024px) {
   .hero-grid,
   .perf-layout,
   .feat-grid,
-  .start-grid {
-    grid-template-columns: 1fr;
+  .start-grid,
+  .demo-layout,
+  .stats-grid {
+    grid-template-columns: 1fr !important;
     text-align: center;
     align-items: center;
+    gap: 40px;
   }
 
   .hero-content {
@@ -1085,10 +1057,7 @@ footer {
     margin-right: auto;
   }
 
-  .hero-cta {
-    justify-content: center;
-  }
-
+  .hero-cta,
   .hero-chips {
     justify-content: center;
   }
@@ -1099,15 +1068,12 @@ footer {
 
   .foot-grid {
     grid-template-columns: 1fr 1fr;
-  }
-
-  .stats-grid {
-    justify-content: center;
+    gap: 40px;
   }
 
   .traders-card {
-    text-align: center !important;
-    padding: 30px 20px !important;
+    padding: 40px 24px;
+    text-align: center;
   }
 
   .hero-panel {
@@ -1115,17 +1081,170 @@ footer {
     justify-content: center;
     margin-top: 40px;
   }
+
+  .stats-grid {
+    justify-content: center;
+    gap: 16px;
+  }
 }
 
-@media(max-width: 768px) {
-  .nav-links {
+/* Step 1 — Mobile Breakpoint */
+@media (max-width: 768px) {
+  /* Global Resets */
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  /* Step 2 — Stack all grid layouts */
+  .grid-2,
+  .feat-grid,
+  .start-grid,
+  .perf-layout,
+  .demo-layout,
+  .stats-grid,
+  .demo-form-inner .dash-shell > div {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Step 3 — Fix container padding */
+  .wrap {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  /* Step 4 — Fix large headings */
+  .h1,
+  .h2 {
+    font-size: clamp(28px, 7vw, 40px) !important;
+  }
+
+  /* Step 5 — Fix buttons */
+  .btn-lg {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Step 6 — Fix navigation */
+  .nav {
+    padding: 0 16px !important; /* Standard padding */
+    height: 60px; /* More compact header */
+    width: 100%;
+    margin: 0 !important;
+    justify-content: space-between;
+  }
+
+  .logo-img {
+    height: 38px !important; /* Slimmer logo */
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nav-right .btn {
     display: none;
   }
-  
+
+  .mobile-toggle {
+    display: flex;
+    padding: 6px; /* Slimmer button */
+  }
+
+  .nav-links {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 280px;
+    height: 100vh;
+    background: rgba(3, 13, 26, 0.98);
+    backdrop-filter: blur(20px);
+    flex-direction: column;
+    padding: 110px 40px;
+    transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 999;
+    border-left: 1px solid var(--glass-b);
+  }
+
+  .nav-links.active {
+    display: flex;
+    right: 0;
+  }
+
+  .nav-links a {
+    font-size: 18px;
+    padding: 15px 0;
+    width: 100%;
+    display: block;
+    border-bottom: 1px solid var(--white-05);
+  }
+
+  /* Step 7 — Fix feature cards */
+  .feat-grid {
+    gap: 16px;
+  }
+
+  /* Step 8 — Fix forms */
+  input {
+    width: 100% !important;
+  }
+
+  /* Additional mobile refinements */
+  .hero {
+    padding-top: 100px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .h1, .h2, .hero-sub, .eyebrow {
+    text-align: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .hero-sub {
+    max-width: 100%;
+  }
+
+  .hero-cta,
+  .hero-chips {
+    width: 100%;
+    display: flex;
+    justify-content: center !important;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .ticker-wrap {
+    top: 60px; /* Attach to compact header */
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    border-bottom: 1px solid var(--glass-b);
+    padding: 4px 0 !important; /* Slimmer ticker */
+  }
+
   .foot-grid {
     grid-template-columns: 1fr;
     text-align: center;
-    gap: 30px;
   }
 
   .foot-about {
@@ -1135,64 +1254,21 @@ footer {
     align-items: center;
   }
 
-  .foot-about .logo-img {
-    height: 50px;
+  .hero-3d-scene {
+    aspect-ratio: auto;
+    min-height: 350px;
   }
 
-  .nav {
-    height: 70px;
-  }
-
-  .nav-links {
-    padding-top: 100px;
-  }
-
-  .logo-img {
-    height: 60px;
-  }
-
-  .ticker-wrap {
-    top: 70px;
-  }
-
-  .hero {
-    padding-top: 120px;
+  .hologram-ring {
+    display: none;
   }
 }
 
-#demo .wrap {
-  padding-top: 80px;
-  padding-bottom: 80px;
-}
-
-/* demo-layout uses the grid definition above (635-640) */
-
-/* Step 6 — Mobile: stack layout */
-@media(max-width: 768px) {
-  .demo-layout {
-    grid-template-columns: 1fr;
-    gap: 40px;
-    text-align: center;
-  }
-
-  .demo-form-col {
-    justify-content: center;
-  }
-
-  .traders-card {
-    padding: 30px 20px;
-  }
-
-  .footer-bottom {
-    flex-direction: column;
-    gap: 15px;
-  }
-}
-
-@media(max-width: 480px) {
+/* Step 1 — Small mobile Breakpoint */
+@media (max-width: 480px) {
   .hero-cta {
     flex-direction: column;
-    width: 100%;
+    gap: 10px;
   }
   
   .hero-cta .btn {
@@ -1200,24 +1276,34 @@ footer {
     justify-content: center;
   }
 
-  .h1 {
-    font-size: 32px;
+  .sec {
+    padding: 60px 0;
   }
 
-  .sec {
-    padding: 50px 0;
+  .st-num {
+    font-size: 28px;
   }
 
   .traders-card {
-    padding: 20px 15px !important;
+    padding: 30px 16px !important;
   }
 
+  #demo .dash-shell {
+    padding: 20px !important;
+  }
+  
   .hero-chips {
     gap: 8px;
   }
-  
+
   .chip {
     padding: 5px 10px;
     font-size: 11px;
   }
+}
+
+/* Step 9 — Fix images (Global) */
+img {
+  max-width: 100%;
+  height: auto;
 }

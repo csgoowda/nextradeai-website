@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Record page view
-    fetch('http://localhost:3000/api/view', { method: 'POST' }).catch(e => console.error('View tracking failed', e));
+    fetch('/api/view', { method: 'POST' }).catch(e => console.error('View tracking failed', e));
 
     /* ── Custom Cursor ── */
     const cur = document.getElementById('cursor');
@@ -258,7 +258,7 @@ function handleFormSubmit(event, type) {
         btn.disabled = true;
     }
 
-    fetch('http://localhost:3000/api/lead', {
+    fetch('/api/lead', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

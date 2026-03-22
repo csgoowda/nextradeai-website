@@ -56,15 +56,24 @@ if (!fs.existsSync(dataDir)) {
 const dbPath = path.resolve(dataDir, 'database.sqlite');
 const oldDbPath = path.resolve(__dirname, 'database.sqlite');
 
-// MIGRATION: If database exists in root but not in data folder, move it
+// MIGRATION: If database exists in root but not in data folder, move it (gracefully)
 if (fs.existsSync(oldDbPath) && !fs.existsSync(dbPath) && oldDbPath !== dbPath) {
-    console.log('MIGRATION: Moving legacy database from root to data folder...');
-    fs.renameSync(oldDbPath, dbPath);
+    try {
+        console.log('MIGRATION: Moving legacy database from root to data folder...');
+        // Copy then delete is safer on Windows than renameSync for locked files
+        fs.copyFileSync(oldDbPath, dbPath);
+        fs.unlinkSync(oldDbPath);
+        console.log('MIGRATION SUCCESS: Database moved to data folder.');
+    } catch (e) {
+        console.warn('MIGRATION WARNING: Could not move database automatically (it might be in use). Using root database instead.');
+    }
 }
 
-console.log(`Database Location: ${dbPath}`);
+// Fallback: If for some reason move failed but root file exists, use it
+const finalDbPath = fs.existsSync(dbPath) ? dbPath : oldDbPath;
+console.log(`Database Location: ${finalDbPath}`);
 
-const db = new sqlite3.Database(dbPath, (err) => {
+const db = new sqlite3.Database(finalDbPath, (err) => {
     if (err) {
         console.error('CRITICAL: Error opening database', err.message);
     } else {

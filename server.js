@@ -10,7 +10,7 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-const VERSION = "1.0.5";
+const VERSION = "1.0.7";
 console.log(`Starting NexTradeAI Server v${VERSION}`);
 
 // Explicit routes for HTML files (placed BEFORE static middleware)
@@ -33,6 +33,14 @@ if (!fs.existsSync(dataDir)) {
 }
 
 const dbPath = path.resolve(dataDir, 'database.sqlite');
+const oldDbPath = path.resolve(__dirname, 'database.sqlite');
+
+// MIGRATION: If database exists in root but not in data folder, move it
+if (fs.existsSync(oldDbPath) && !fs.existsSync(dbPath) && oldDbPath !== dbPath) {
+    console.log('MIGRATION: Moving legacy database from root to data folder...');
+    fs.renameSync(oldDbPath, dbPath);
+}
+
 console.log(`Database Location: ${dbPath}`);
 
 const db = new sqlite3.Database(dbPath, (err) => {

@@ -1581,3 +1581,35 @@ img {
     padding: 20px !important;
   }
 }
+
+@media (max-width: 480px) {
+  .wrap {
+    padding: 0 16px;
+  }
+  
+  .traders-card h2 {
+    font-size: 22px !important;
+  }
+
+  .traders-card p {
+    font-size: 13px !important;
+  }
+
+  .dash-shell {
+    padding: 25px 15px !important;
+  }
+
+  .buy-form-grid input {
+    padding: 10px !important;
+    font-size: 14px !important;
+  }
+
+  #buyBtn {
+    padding: 14px !important;
+    font-size: 14px !important;
+  }
+
+  #buy-form-section {
+    padding: 40px 0 !important;
+  }
+}

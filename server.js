@@ -149,7 +149,7 @@ app.post('/api/view', globalLimiter, (req, res) => {
 app.use(express.static(path.join(__dirname, '.')));
 
 // Fallback to Index
-app.get('/*', (req, res) => {
+app.get('/:path*', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 

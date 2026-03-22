@@ -23,6 +23,11 @@
     </style>
 </head>
 <body>
+    <!-- UI Elements -->
+    <div id="cursor"></div>
+    <div id="cursor-ring"></div>
+    <canvas id="bg-canvas"></canvas>
+
     <div class="wrap">
         <div class="header-actions">
             <div>
@@ -58,14 +63,9 @@
         </div>
     </div>
 
+    <script src="main.js"></script>
     <script>
         let allUsers = [];
-
-        // Use relative path so it works on both localhost and Railway
-        const API_BASE = ''; 
-        
-        // Record page view (using relative path to work everywhere)
-        fetch(`/api/view`, { method: 'POST' }).catch(e => console.error('View tracking failed', e));
 
         function loadData() {
             const tbody = document.getElementById('userTable');

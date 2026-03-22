@@ -148,8 +148,8 @@ app.post('/api/view', globalLimiter, (req, res) => {
 // Static Middleware
 app.use(express.static(path.join(__dirname, '.')));
 
-// Fallback to Index
-app.get('/:path*', (req, res) => {
+// Fallback to Index (Express 5 fix: use a direct Regex object)
+app.get(/.*/, (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 

@@ -12,6 +12,15 @@ app.use(express.json());
 // Serve static frontend files from this directory
 app.use(express.static(path.join(__dirname, '.'))); 
 
+// Debug: Log files in directory to help find admin.html on Railway
+const fs = require('fs');
+console.log('Production Files:', fs.readdirSync(__dirname));
+
+// Explicit routes for HTML files to avoid any static serving issues on Railway
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
+app.get('/admin.html', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
+
 // Initialize SQLite database
 const dataDir = process.env.DATA_DIR || __dirname;
 const dbPath = path.resolve(dataDir, 'database.sqlite');

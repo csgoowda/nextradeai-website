@@ -1541,3 +1541,43 @@ img {
   background: #ff2573 !important;
   box-shadow: 0 12px 25px rgba(233, 30, 99, 0.4) !important;
 }
+
+/* Standalone Buy Page Optimizations */
+.buy-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .buy-form-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .product-layout {
+    padding: 30px 0;
+  }
+
+  .product-img {
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .product-title {
+    font-size: 28px;
+    margin-top: 20px;
+  }
+  
+  .buy-page .nav-right {
+    display: none; /* Hide 'Back to Home' on very small screens to save space, or use home icon */
+  }
+
+  .buy-page .logo-img {
+    height: 60px;
+  }
+  
+  .traders-card {
+    padding: 20px !important;
+  }
+}

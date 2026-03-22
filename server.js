@@ -10,7 +10,7 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-const VERSION = "1.0.9";
+const VERSION = "1.1.0";
 console.log(`Starting NexTradeAI Server v${VERSION}`);
 
 // Explicit routes for HTML files (placed BEFORE static middleware)
@@ -21,6 +21,14 @@ app.get('/admin', (req, res) => {
 app.get('/admin.html', (req, res) => {
     console.log('Request for /admin.html received. Serving admin.html...');
     res.status(200).sendFile(path.join(__dirname, 'admin.html'));
+});
+app.get('/buy', (req, res) => {
+    console.log('Request for /buy received. Serving buy.html...');
+    res.status(200).sendFile(path.join(__dirname, 'buy.html'));
+});
+app.get('/buy.html', (req, res) => {
+    console.log('Request for /buy.html received. Serving buy.html...');
+    res.status(200).sendFile(path.join(__dirname, 'buy.html'));
 });
 app.get('/', (req, res) => {
     res.status(200).sendFile(path.join(__dirname, 'index.html'));

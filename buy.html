@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexTradeAI | Purchase Lifetime License</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="buy-page">
+    <!-- UI Elements -->
+    <div id="cursor"></div>
+    <div id="cursor-ring"></div>
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Navbar -->
+    <header id="hdr">
+        <div class="nav">
+            <a href="index.html" class="logo">
+                <img src="assets/images/logo.svg" alt="NexTradeAI Logo" class="logo-img">
+            </a>
+            <div class="nav-right">
+                <a href="index.html" class="btn btn-ghost btn-sm">Back to Home</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Product Detail Section -->
+    <section class="sec" id="product-detail" style="margin-top: 50px;">
+        <div class="wrap">
+            <div class="product-layout">
+                <div class="product-image-side">
+                    <div class="product-box-glow">
+                        <img src="nextradeai_product_box_1774194319229.png" alt="NexTradeAI MT5 Lifetime License" class="product-img">
+                    </div>
+                </div>
+                <div class="product-info-side">
+                    <nav class="breadcrumb">HOME / LIFETIME LICENSE / <span class="active">NEXTRADEAI | MT5 LIFETIME LICENSE</span></nav>
+                    <h1 class="product-title">NEXTRADEAI | <br>MT5 LIFETIME LICENSE</h1>
+                    <p class="product-subtitle">MT5 Lifetime License</p>
+                    
+                    <div class="price-tag">
+                        <span class="old-price">$299.00</span>
+                        <span class="new-price">$199.00</span>
+                    </div>
+
+                    <div class="product-specs">
+                        <h4>This Lifetime Plan includes:</h4>
+                        <ul>
+                            <li>1 MT5 Live account license and 1 MT5 Demo account license.</li>
+                            <li>Easy setup guide and settings in a PDF file.</li>
+                            <li>FOREX Bot + GOLD(xauusd) Bot.</li>
+                            <li>1 Month Free VPS hosting (shared) renewable @ 10$ / month.</li>
+                            <li>Free Lifetime upgrades.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Buy Form Section -->
+    <section class="sec" id="buy-form-section" style="background: rgba(0,0,0,0.1); padding: 80px 0;">
+        <div class="wrap">
+            <div class="traders-card" style="background: rgba(0, 212, 160, 0.05); border: 1px solid rgba(0, 212, 160, 0.2); max-width: 850px; margin: 0 auto; box-shadow: 0 30px 60px rgba(0,0,0,0.3);">
+                <div class="demo-layout" style="grid-template-columns: 1fr;">
+                    <div style="text-align: center; margin-bottom: 40px;">
+                        <h2 class="h2">Finalize Your <span class="grad">License</span></h2>
+                        <p class="muted">Fill in your details below. Your license will be sent to your email after verification.</p>
+                    </div>
+                    <div class="demo-form-col">
+                        <div class="demo-form-inner">
+                            <div class="dash-shell" style="padding: 40px; background: rgba(0,0,0,0.4); border-radius: 12px;">
+                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                                    <input type="text" id="buyName" placeholder="Full Name"
+                                        style="background: rgba(255,255,255,0.05); border:1px solid var(--white-10); padding: 14px; border-radius: 8px; color: white;" required>
+                                    <input type="email" id="buyEmail" placeholder="Email Address"
+                                        style="background: rgba(255,255,255,0.05); border:1px solid var(--white-10); padding: 14px; border-radius: 8px; color: white;" required>
+                                    <input type="text" id="buyCountry" placeholder="Country"
+                                        style="background: rgba(255,255,255,0.05); border:1px solid var(--white-10); padding: 14px; border-radius: 8px; color: white;" required>
+                                    <input type="tel" id="buyPhone" placeholder="Phone Number"
+                                        style="background: rgba(255,255,255,0.05); border:1px solid var(--white-10); padding: 14px; border-radius: 8px; color: white;" required>
+                                    <input type="text" id="buyMt5" placeholder="MT5 Account Number for Activation"
+                                        style="grid-column: span 2; background: rgba(255,255,255,0.05); border:1px solid var(--white-10); padding: 14px; border-radius: 8px; color: white;" required>
+                                </div>
+                                <button class="btn btn-glow" id="buyBtn" style="width:100%; margin-top:30px; background: var(--green); color: black; padding: 18px; font-weight: 800; font-size: 16px;"
+                                    onclick="submitBuy(event)">Purchase License & Connect Telegram</button>
+                                <p id="buyError" style="color: #ff6b6b; margin-top: 15px; font-size: 14px; text-align: center; display: none;">Please fill all required fields correctly.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="margin-top: 100px; padding: 60px 0; border-top: 1px solid var(--white-10);">
+        <div class="wrap" style="text-align: center;">
+            <div class="foot-copy" style="color: rgba(255,255,255,0.5);">
+                © 2024 NexTradeAI | Professional Algorithmic Trading Solutions.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Contact FAB -->
+    <a href="https://t.me/Chethans18" class="contact-fab" target="_blank">
+        <div class="fab-icon">
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="feather feather-send"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+        </div>
+        <span>Contact Us</span>
+    </a>
+
+    <script src="main.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

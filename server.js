@@ -82,6 +82,7 @@ app.post('/api/lead', (req, res) => {
                     if (updateErr) {
                         return res.status(500).json({ error: 'Error updating user' });
                     }
+                    console.log(`Updated user: ${email} (New Source: ${updatedSource})`);
                     res.status(200).json({ success: true, message: 'User updated', source: updatedSource });
                 }
             );
@@ -94,6 +95,7 @@ app.post('/api/lead', (req, res) => {
                     if (insertErr) {
                         return res.status(500).json({ error: 'Error inserting user' });
                     }
+                    console.log(`Created new user: ${email} (Source: ${source})`);
                     res.status(201).json({ success: true, message: 'User created' });
                 }
             );

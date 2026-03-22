@@ -61,13 +61,17 @@
     <script>
         let allUsers = [];
 
-        const API_BASE = 'https://nextradeai-website-production.up.railway.app';
+        // Use relative path so it works on both localhost and Railway
+        const API_BASE = ''; 
         
+        // Record page view (using relative path to work everywhere)
+        fetch(`/api/view`, { method: 'POST' }).catch(e => console.error('View tracking failed', e));
+
         function loadData() {
             const tbody = document.getElementById('userTable');
             tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 30px;">Loading database records...</td></tr>';
             
-            fetch(`${API_BASE}/api/admin/data`)
+            fetch(`/api/admin/data`)
             .then(res => res.json())
             .then(data => {
                 const tbody = document.getElementById('userTable');

@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Record page view
-    const API_BASE = 'https://nextradeai-website-production.up.railway.app';
-    fetch(`${API_BASE}/api/view`, { method: 'POST' }).catch(e => console.error('View tracking failed', e));
+    // Record page view (using relative path to work everywhere)
+    fetch(`/api/view`, { method: 'POST' }).catch(e => console.error('View tracking failed', e));
 
     /* ── Custom Cursor ── */
     const cur = document.getElementById('cursor');
@@ -259,8 +258,8 @@ function handleFormSubmit(event, type) {
         btn.disabled = true;
     }
 
-    const API_BASE = 'https://nextradeai-website-production.up.railway.app';
-    fetch(`${API_BASE}/api/lead`, {
+    // Use relative path to work on both localhost and Railway
+    fetch(`/api/lead`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

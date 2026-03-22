@@ -5,50 +5,67 @@
     <title>NexTradeAI | Admin DB Viewer</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        body { padding: 40px; background: var(--navy); color: white; display: block; overflow-y: auto;}
-        .admin-card { background: rgba(6, 20, 40, .55); padding: 30px; border-radius: var(--r-m); border: 1px solid var(--glass-b); backdrop-filter: var(--blur); overflow-x: auto;}
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px;}
-        th, td { padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: left; }
-        th { background: rgba(0, 212, 160, 0.1); color: var(--green); text-transform: uppercase; font-size: 11px; letter-spacing: 0.1em;}
+        body { padding: 20px; background: var(--navy); color: white; display: block; overflow-y: auto; font-family: var(--font-body); }
+        .admin-card { background: rgba(6, 20, 40, .55); padding: 20px; border-radius: var(--r-m); border: 1px solid var(--glass-b); backdrop-filter: var(--blur); }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; min-width: 800px; }
+        th, td { padding: 14px; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: left; }
+        th { background: rgba(0, 212, 160, 0.1); color: var(--green); text-transform: uppercase; font-size: 10px; letter-spacing: 0.1em;}
         tr:hover { background: rgba(255,255,255,0.02); }
-        .source-tag { background: rgba(245, 200, 66, 0.15); color: var(--gold); padding: 4px 10px; border-radius: 20px; font-weight: 600; font-size: 12px; }
+        .source-tag { background: rgba(245, 200, 66, 0.1); color: var(--gold); padding: 4px 10px; border-radius: 20px; font-weight: 600; font-size: 11px; display: inline-block; margin: 2px; }
+        .table-responsive { overflow-x: auto; width: 100%; border-radius: 12px; }
+        .header-actions { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 30px; }
+        @media (max-width: 768px) {
+            body { padding: 15px; }
+            .h2 { font-size: 24px; }
+            .header-actions { flex-direction: column; align-items: flex-start; }
+            .admin-card { padding: 15px; }
+        }
     </style>
 </head>
 <body>
     <div class="wrap">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+        <div class="header-actions">
             <div>
                 <h2 class="h2">Database <span class="grad">Admin Panel</span></h2>
-                <p class="muted">This directly reads your SQLite database behind the scenes so you can see exactly how it works and what data is gathered.</p>
+                <p class="muted">This directly reads your SQLite database behind the scenes.</p>
             </div>
-            <button onclick="exportToCSV()" class="btn btn-glow btn-sm" style="height: fit-content; background: var(--cyan); color: var(--navy);">📥 Export to CSV</button>
+            <div style="display: flex; gap: 10px; width: 100%; max-width: 400px; justify-content: flex-end;">
+                <button onclick="loadData()" class="btn btn-ghost btn-sm" style="background: rgba(255,255,255,0.05);">🔄 Refresh Data</button>
+                <button onclick="exportToCSV()" class="btn btn-glow btn-sm" style="background: var(--cyan); color: var(--navy);">📥 Export CSV</button>
+            </div>
         </div>
         
         <div class="admin-card">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Country</th>
-                        <th>Phone</th>
-                        <th>MT5 Account</th>
-                        <th>Source</th>
-                        <th>Date Registered</th>
-                    </tr>
-                </thead>
-                <tbody id="userTable">
-                    <tr><td colspan="8" style="text-align:center;">Loading database records...</td></tr>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Country</th>
+                            <th>Phone</th>
+                            <th>MT5 Account</th>
+                            <th>Source</th>
+                            <th>Date Registered</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userTable">
+                        <tr><td colspan="8" style="text-align:center;">Loading database records...</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <script>
         let allUsers = [];
 
-        fetch('/api/admin/data')
+        function loadData() {
+            const tbody = document.getElementById('userTable');
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 30px;">Loading database records...</td></tr>';
+            
+            fetch('/api/admin/data')
             .then(res => res.json())
             .then(data => {
                 const tbody = document.getElementById('userTable');
@@ -73,6 +90,10 @@
             .catch(err => {
                 document.getElementById('userTable').innerHTML = '<tr><td colspan="8" style="text-align:center; color:#ff6b6b; padding: 30px;">Error connecting to the Node.js server. Please make sure node server.js is running.</td></tr>';
             });
+        }
+
+        // Initial load
+        loadData();
 
         function exportToCSV() {
             if (allUsers.length === 0) {
@@ -83,21 +104,23 @@
             const header = ["ID", "Full Name", "Email", "Country", "Phone", "MT5 Account", "Source", "Date Registered"];
             const rows = allUsers.map(u => [
                 u.id, 
-                u.fullName, 
-                u.email, 
-                u.country, 
-                u.phone, 
-                u.mt5Account, 
-                u.source, 
+                u.fullName.replace(/"/g, '""'), 
+                u.email.replace(/"/g, '""'), 
+                u.country.replace(/"/g, '""'), 
+                u.phone.replace(/"/g, '""'), 
+                u.mt5Account.replace(/"/g, '""'), 
+                u.source.replace(/"/g, '""'), 
                 new Date(u.created_at).toLocaleString()
             ]);
 
-            let csvContent = "data:text/csv;charset=utf-8," 
-                + [header, ...rows].map(e => e.map(cell => `"${cell}"`).join(",")).join("\n");
+            let csvContent = "\uFEFF" // UTF-8 BOM
+                + header.map(h => `"${h}"`).join(",") + "\n"
+                + rows.map(r => r.map(cell => `"${cell}"`).join(",")).join("\n");
 
-            const encodedUri = encodeURI(csvContent);
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
             const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
+            link.setAttribute("href", url);
             link.setAttribute("download", `nextradeai_leads_${new Date().toISOString().split('T')[0]}.csv`);
             document.body.appendChild(link);
             link.click();

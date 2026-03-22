@@ -61,11 +61,13 @@
     <script>
         let allUsers = [];
 
+        const API_BASE = 'https://nextradeai-website-production.up.railway.app';
+        
         function loadData() {
             const tbody = document.getElementById('userTable');
             tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 30px;">Loading database records...</td></tr>';
             
-            fetch('/api/admin/data')
+            fetch(`${API_BASE}/api/admin/data`)
             .then(res => res.json())
             .then(data => {
                 const tbody = document.getElementById('userTable');

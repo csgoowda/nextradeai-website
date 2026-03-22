@@ -10,13 +10,26 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-const VERSION = "1.0.7";
+const VERSION = "1.0.9";
 console.log(`Starting NexTradeAI Server v${VERSION}`);
 
 // Explicit routes for HTML files (placed BEFORE static middleware)
-app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
-app.get('/admin.html', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+app.get('/admin', (req, res) => {
+    console.log('Request for /admin received. Serving admin.html...');
+    res.status(200).sendFile(path.join(__dirname, 'admin.html'));
+});
+app.get('/admin.html', (req, res) => {
+    console.log('Request for /admin.html received. Serving admin.html...');
+    res.status(200).sendFile(path.join(__dirname, 'admin.html'));
+});
+app.get('/', (req, res) => {
+    res.status(200).sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Diagnostic Ping Endpoint
+app.get('/api/ping', (req, res) => {
+    res.json({ status: "alive", version: VERSION, time: new Date().toISOString() });
+});
 
 // Serve static frontend files
 app.use(express.static(path.join(__dirname, '.'))); 

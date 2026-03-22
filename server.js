@@ -25,14 +25,17 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan('combined')); // Structured logging
 
-// 2. Session Management (In-memory for simplicity, use Redis/Store for cluster production)
+// 2. Session Management (In-memory for simplicity)
+app.set('trust proxy', 1); // CRITICAL: Required for secure cookies behind Railway proxy
 app.use(session({
     secret: process.env.SESSION_SECRET || 'nxt_secret_dev_123',
     resave: false,
     saveUninitialized: false,
+    name: 'nextrade_session', // Custom name for less obvious fingerprints
     cookie: { 
-        secure: process.env.NODE_ENV === 'production', 
+        secure: process.env.NODE_ENV === 'production', // Matches environment
         httpOnly: true,
+        sameSite: 'lax', // Needed for cross-domain redirects if any
         maxAge: 1000 * 60 * 60 * 24 // 24 hours
     }
 }));

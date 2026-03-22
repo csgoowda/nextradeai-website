@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexTradeAI | Admin Login</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { background: var(--navy); height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .login-card { background: rgba(6, 20, 40, .8); padding: 40px; border-radius: 20px; border: 1px solid var(--glass-b); backdrop-filter: blur(20px); width: 100%; max-width: 400px; text-align: center; position: relative; z-index: 10; }
+        .login-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--white-10); padding: 15px; border-radius: 10px; color: white; margin-bottom: 20px; box-sizing: border-box; font-family: var(--font-body); }
+        .login-input:focus { border-color: var(--cyan); outline: none; box-shadow: 0 0 15px rgba(0, 243, 255, 0.2); }
+        .error-msg { color: #ff6b6b; font-size: 14px; margin-bottom: 20px; display: none; }
+    </style>
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+    
+    <div class="login-card">
+        <div style="margin-bottom: 30px;">
+            <img src="logo.svg" alt="NexTradeAI" style="height: 50px; margin-bottom: 10px;">
+            <h2 class="h2" style="font-size: 24px;">Admin <span class="grad">Access</span></h2>
+        </div>
+        
+        <div id="error" class="error-msg">Invalid username or password.</div>
+        
+        <input type="text" id="username" class="login-input" placeholder="Username">
+        <input type="password" id="password" class="login-input" placeholder="Password">
+        
+        <button onclick="doLogin()" id="loginBtn" class="btn btn-glow" style="width: 100%; padding: 15px; font-weight: 700;">Authorize Access</button>
+    </div>
+
+    <script src="main.js"></script>
+    <script>
+        async function doLogin() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const err = document.getElementById('error');
+            const btn = document.getElementById('loginBtn');
+            
+            if(!user || !pass) return;
+
+            btn.textContent = 'Verifying...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/admin/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: user, password: pass })
+                });
+                
+                const data = await res.json();
+                if (data.success) {
+                    window.location.href = '/admin';
+                } else {
+                    err.style.display = 'block';
+                    btn.textContent = 'Authorize Access';
+                    btn.disabled = false;
+                }
+            } catch (e) {
+                console.error(e);
+                err.textContent = 'Server connection error.';
+                err.style.display = 'block';
+                btn.textContent = 'Authorize Access';
+                btn.disabled = false;
+            }
+        }
+
+        // Enter key support
+        document.querySelectorAll('.login-input').forEach(input => {
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') doLogin();
+            });
+        });
+    </script>
+</body>
+</html>

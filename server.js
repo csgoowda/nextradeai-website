@@ -1,161 +1,135 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+const fs = require('fs');
+const helmet = require('helmet');
+const compression = require('compression');
+const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
+const session = require('express-session');
+const bcrypt = require('bcryptjs');
+const { body, validationResult } = require('express-validator');
 
 const app = express();
 const port = process.env.PORT || 3000;
+const VERSION = "1.2.0";
 
-// Middleware
+// 1. Security & Performance Middleware
+app.use(helmet({
+    contentSecurityPolicy: false, // Set to false to allow external scripts like Lucide icons easily, or configure specifically
+}));
+app.use(compression());
 app.use(cors());
 app.use(express.json());
+app.use(morgan('combined')); // Structured logging
 
-const VERSION = "1.1.0";
-console.log(`Starting NexTradeAI Server v${VERSION}`);
+// 2. Session Management (In-memory for simplicity, use Redis/Store for cluster production)
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'nxt_secret_dev_123',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { 
+        secure: process.env.NODE_ENV === 'production', 
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24 // 24 hours
+    }
+}));
 
-// Explicit routes for HTML files (placed BEFORE static middleware)
+// 3. Rate Limiting
+const globalLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per window
+    message: { error: "Too many requests, please try again later." }
+});
+const apiLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 20, // Stricter limit for lead submissions
+    message: { error: "Spam detected. Please wait before submitting again." }
+});
+app.use('/api/', globalLimiter);
+
+// 4. Admin Authentication Middleware
+const requireAuth = (req, res, next) => {
+    if (req.session && req.session.isAdmin) {
+        return next();
+    }
+    res.status(401).json({ error: "Unauthorized access. Please login." });
+};
+
+// --- ROUTES ---
+
+// Public Legal Pages
+app.get('/privacy-policy', (req, res) => res.sendFile(path.join(__dirname, 'privacy-policy.html')));
+app.get('/terms', (req, res) => res.sendFile(path.join(__dirname, 'terms.html')));
+app.get('/contact', (req, res) => res.sendFile(path.join(__dirname, 'contact.html')));
+
+// Admin Auth Routes
+app.post('/api/admin/login', (req, res) => {
+    const { username, password } = req.body;
+    // For simplicity, we use env vars. In a multi-user system, this would be a DB check.
+    if (username === process.env.ADMIN_USER && password === process.env.ADMIN_PASS) {
+        req.session.isAdmin = true;
+        return res.json({ success: true, message: "Logged in successfully" });
+    }
+    res.status(401).json({ error: "Invalid credentials" });
+});
+
+app.post('/api/admin/logout', (req, res) => {
+    req.session.destroy();
+    res.json({ success: true });
+});
+
+// Admin Dashboard (Protected UI)
 app.get('/admin', (req, res) => {
-    console.log('Request for /admin received. Serving admin.html...');
-    res.status(200).sendFile(path.join(__dirname, 'admin.html'));
-});
-app.get('/admin.html', (req, res) => {
-    console.log('Request for /admin.html received. Serving admin.html...');
-    res.status(200).sendFile(path.join(__dirname, 'admin.html'));
-});
-app.get('/buy', (req, res) => {
-    console.log('Request for /buy received. Serving buy.html...');
-    res.status(200).sendFile(path.join(__dirname, 'buy.html'));
-});
-app.get('/buy.html', (req, res) => {
-    console.log('Request for /buy.html received. Serving buy.html...');
-    res.status(200).sendFile(path.join(__dirname, 'buy.html'));
-});
-app.get('/', (req, res) => {
-    res.status(200).sendFile(path.join(__dirname, 'index.html'));
+    if (!req.session.isAdmin) return res.redirect('/login.html');
+    res.sendFile(path.join(__dirname, 'admin.html'));
 });
 
-// Diagnostic Ping Endpoint
-app.get('/api/ping', (req, res) => {
-    res.json({ status: "alive", version: VERSION, time: new Date().toISOString() });
-});
-
-// Serve static frontend files
-app.use(express.static(path.join(__dirname, '.'))); 
-
-// Debug: Log files in directory to help find admin.html on Railway
-const fs = require('fs');
-console.log('Production Files:', fs.readdirSync(__dirname));
-
-// Initialize SQLite database
-const dataDir = process.env.DATA_DIR || path.join(__dirname, 'data');
-if (!fs.existsSync(dataDir)) {
-    console.log(`Creating database directory: ${dataDir}`);
-    fs.mkdirSync(dataDir, { recursive: true });
-}
-
-const dbPath = path.resolve(dataDir, 'database.sqlite');
-const oldDbPath = path.resolve(__dirname, 'database.sqlite');
-
-// MIGRATION: If database exists in root but not in data folder, move it (gracefully)
-if (fs.existsSync(oldDbPath) && !fs.existsSync(dbPath) && oldDbPath !== dbPath) {
-    try {
-        console.log('MIGRATION: Moving legacy database from root to data folder...');
-        // Copy then delete is safer on Windows than renameSync for locked files
-        fs.copyFileSync(oldDbPath, dbPath);
-        fs.unlinkSync(oldDbPath);
-        console.log('MIGRATION SUCCESS: Database moved to data folder.');
-    } catch (e) {
-        console.warn('MIGRATION WARNING: Could not move database automatically (it might be in use). Using root database instead.');
-    }
-}
-
-// Fallback: If for some reason move failed but root file exists, use it
-const finalDbPath = fs.existsSync(dbPath) ? dbPath : oldDbPath;
-console.log(`Database Location: ${finalDbPath}`);
-
-const db = new sqlite3.Database(finalDbPath, (err) => {
-    if (err) {
-        console.error('CRITICAL: Error opening database', err.message);
-    } else {
-        console.log('Connected to the SQLite database successfully.');
-        
-        // Create views table
-        db.run(`CREATE TABLE IF NOT EXISTS page_views (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-        )`);
-
-        // Create users table
-        db.run(`CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            fullName TEXT,
-            email TEXT,
-            country TEXT,
-            mt5Account TEXT,
-            phone TEXT,
-            source TEXT,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        )`);
-    }
-});
-
-// Endpoint to register a page view
-app.post('/api/view', (req, res) => {
-    db.run(`INSERT INTO page_views DEFAULT VALUES`, function (err) {
-        if (err) {
-            console.error('Error inserting view:', err.message);
-            return res.status(500).json({ error: 'Internal server error' });
-        }
-        res.status(200).json({ success: true, id: this.lastID });
+// Admin Data API (Protected)
+app.get('/api/admin/data', requireAuth, (req, res) => {
+    db.all(`SELECT * FROM users ORDER BY created_at DESC`, [], (err, rows) => {
+        if (err) return res.status(500).json({ error: 'Database error' });
+        res.json({ users: rows });
     });
 });
 
-// Endpoint to save or update lead/user data
-app.post('/api/lead', (req, res) => {
-    const { fullName, email, country, mt5Account, phone, source } = req.body;
-
-    if (!fullName || !email || !country || !mt5Account || !phone) {
-        return res.status(400).json({ error: 'All fields are required.' });
+// Public Lead API (Validated & Rate Limited)
+app.post('/api/lead', apiLimiter, [
+    body('fullName').trim().isLength({ min: 2, max: 100 }).escape(),
+    body('email').isEmail().normalizeEmail(),
+    body('phone').trim().isLength({ min: 7, max: 20 }).escape(),
+    body('country').trim().isLength({ min: 2, max: 50 }).escape(),
+    body('mt5Account').trim().isNumeric().isLength({ min: 1, max: 20 }).escape()
+], (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ error: "Invalid input provided.", details: errors.array() });
     }
 
-    // Check if user with this email or phone already exists
-    // We'll treat email as the primary key for checking
+    const { fullName, email, country, mt5Account, phone, source } = req.body;
+    
     db.get(`SELECT * FROM users WHERE email = ?`, [email], (err, row) => {
-        if (err) {
-            console.error('Database error:', err.message);
-            return res.status(500).json({ error: 'Database error' });
-        }
+        if (err) return res.status(500).json({ error: 'Database error' });
 
         if (row) {
-            // User exists, update source if not already included
             let updatedSource = row.source || '';
             if (!updatedSource.includes(source)) {
                 updatedSource = updatedSource ? `${updatedSource},${source}` : source;
             }
-
             db.run(`UPDATE users SET fullName = ?, country = ?, mt5Account = ?, phone = ?, source = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
                 [fullName, country, mt5Account, phone, updatedSource, row.id],
                 function (updateErr) {
-                    if (updateErr) {
-                        console.error(`UPDATE ERROR for ${email}:`, updateErr.message);
-                        return res.status(500).json({ error: 'Error updating user in database' });
-                    }
-                    console.log(`SUCCESS: Updated user: ${email} (New Source: ${updatedSource})`);
-                    res.status(200).json({ success: true, message: 'User updated', source: updatedSource });
+                    if (updateErr) return res.status(500).json({ error: 'Update failed' });
+                    res.status(200).json({ success: true, message: 'User updated' });
                 }
             );
-
         } else {
-            // New user, insert
             db.run(`INSERT INTO users (fullName, email, country, mt5Account, phone, source) VALUES (?, ?, ?, ?, ?, ?)`,
                 [fullName, email, country, mt5Account, phone, source],
                 function (insertErr) {
-                    if (insertErr) {
-                        console.error(`INSERT ERROR for ${email}:`, insertErr.message);
-                        return res.status(500).json({ error: 'Error inserting user into database' });
-                    }
-                    console.log(`SUCCESS: Created new user: ${email} (Source: ${source})`);
+                    if (insertErr) return res.status(500).json({ error: 'Creation failed' });
                     res.status(201).json({ success: true, message: 'User created' });
                 }
             );
@@ -163,16 +137,59 @@ app.post('/api/lead', (req, res) => {
     });
 });
 
-// Endpoint to view all user data easily
-app.get('/api/admin/data', (req, res) => {
-    db.all(`SELECT * FROM users`, [], (err, rows) => {
-        if (err) {
-            return res.status(500).json({ error: 'Database error' });
-        }
-        res.json({ users: rows });
+// View Tracking (Simple counters)
+app.post('/api/view', globalLimiter, (req, res) => {
+    db.run(`INSERT INTO page_views DEFAULT VALUES`, (err) => {
+        if (err) return res.status(500).json({ error: 'Logging failed' });
+        res.status(200).json({ success: true });
     });
 });
 
+// Static Middleware
+app.use(express.static(path.join(__dirname, '.')));
+
+// Fallback to Index
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// 5. Database Initialization
+const dataDir = process.env.DATA_DIR || path.join(__dirname, 'data');
+if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
+
+const dbPath = path.resolve(dataDir, 'database.sqlite');
+const oldDbPath = path.resolve(__dirname, 'database.sqlite');
+
+if (fs.existsSync(oldDbPath) && !fs.existsSync(dbPath) && oldDbPath !== dbPath) {
+    try {
+        fs.copyFileSync(oldDbPath, dbPath);
+        fs.unlinkSync(oldDbPath);
+        console.log('Database migrated to data folder.');
+    } catch (e) {
+        console.warn('Migration failed, using root database.');
+    }
+}
+
+const finalDbPath = fs.existsSync(dbPath) ? dbPath : oldDbPath;
+const db = new sqlite3.Database(finalDbPath, (err) => {
+    if (err) console.error('Error opening database', err.message);
+    else {
+        console.log(`Connected to database at ${finalDbPath}`);
+        db.run(`CREATE TABLE IF NOT EXISTS page_views (id INTEGER PRIMARY KEY AUTOINCREMENT, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)`);
+        db.run(`CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            fullName TEXT, email TEXT, country TEXT, mt5Account TEXT, phone TEXT, source TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP, updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )`);
+    }
+});
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+    console.error('SERVER ERROR:', err.stack);
+    res.status(500).json({ error: 'An unexpected internal server error occurred.' });
+});
+
 app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+    console.log(`NexTradeAI Server v${VERSION} running at http://localhost:${port}`);
 });

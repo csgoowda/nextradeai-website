@@ -299,11 +299,12 @@ function handleFormSubmit(event, type) {
                     btn.style.background = ''; // reset to default
                     btn.style.color = '';
                 }
-            }, 1000);
+            }, 1500);
         } else {
+            // Error from server (Validation or Rate Limit)
             if (errorEl) {
                 errorEl.style.display = 'block';
-                errorEl.textContent = data.error || 'An error occurred.';
+                errorEl.textContent = data.error || 'Submission failed. Please try again.';
             }
             if (btn) {
                 btn.textContent = isTrial ? 'Start My Free Trial' : 'Buy Now';

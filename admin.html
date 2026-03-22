@@ -34,9 +34,10 @@
                 <h2 class="h2">Database <span class="grad">Admin Panel</span></h2>
                 <p class="muted">This directly reads your SQLite database behind the scenes.</p>
             </div>
-            <div style="display: flex; gap: 10px; width: 100%; max-width: 400px; justify-content: flex-end;">
-                <button onclick="loadData()" class="btn btn-ghost btn-sm" style="background: rgba(255,255,255,0.05);">🔄 Refresh Data</button>
-                <button onclick="exportToCSV()" class="btn btn-glow btn-sm" style="background: var(--cyan); color: var(--navy);">📥 Export CSV</button>
+            <div style="display: flex; gap: 10px; width: 100%; max-width: 450px; justify-content: flex-end; align-items: center;">
+                <button onclick="loadData()" class="btn btn-ghost btn-sm" style="background: rgba(255,255,255,0.05);">🔄 Refresh</button>
+                <button onclick="exportToCSV()" class="btn btn-ghost btn-sm" style="background: rgba(255,255,255,0.05);">📥 Export CSV</button>
+                <button onclick="doLogout()" class="btn btn-sm" style="background: #ff6b6b; color: white;">🔒 Logout</button>
             </div>
         </div>
         
@@ -131,6 +132,12 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+        }
+
+        async function doLogout() {
+            if(!confirm("Are you sure you want to logout?")) return;
+            await fetch('/api/admin/logout', { method: 'POST' });
+            window.location.href = '/login.html';
         }
     </script>
 </body>

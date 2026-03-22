@@ -9,17 +9,21 @@ const port = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(express.json());
-// Serve static frontend files from this directory
+
+const VERSION = "1.0.5";
+console.log(`Starting NexTradeAI Server v${VERSION}`);
+
+// Explicit routes for HTML files (placed BEFORE static middleware)
+app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
+app.get('/admin.html', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+
+// Serve static frontend files
 app.use(express.static(path.join(__dirname, '.'))); 
 
 // Debug: Log files in directory to help find admin.html on Railway
 const fs = require('fs');
 console.log('Production Files:', fs.readdirSync(__dirname));
-
-// Explicit routes for HTML files to avoid any static serving issues on Railway
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
-app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
-app.get('/admin.html', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
 
 // Initialize SQLite database
 const dataDir = process.env.DATA_DIR || __dirname;

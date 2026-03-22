@@ -26,13 +26,20 @@ const fs = require('fs');
 console.log('Production Files:', fs.readdirSync(__dirname));
 
 // Initialize SQLite database
-const dataDir = process.env.DATA_DIR || __dirname;
+const dataDir = process.env.DATA_DIR || path.join(__dirname, 'data');
+if (!fs.existsSync(dataDir)) {
+    console.log(`Creating database directory: ${dataDir}`);
+    fs.mkdirSync(dataDir, { recursive: true });
+}
+
 const dbPath = path.resolve(dataDir, 'database.sqlite');
+console.log(`Database Location: ${dbPath}`);
+
 const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
-        console.error('Error opening database', err.message);
+        console.error('CRITICAL: Error opening database', err.message);
     } else {
-        console.log('Connected to the SQLite database.');
+        console.log('Connected to the SQLite database successfully.');
         
         // Create views table
         db.run(`CREATE TABLE IF NOT EXISTS page_views (
@@ -93,9 +100,10 @@ app.post('/api/lead', (req, res) => {
                 [fullName, country, mt5Account, phone, updatedSource, row.id],
                 function (updateErr) {
                     if (updateErr) {
-                        return res.status(500).json({ error: 'Error updating user' });
+                        console.error(`UPDATE ERROR for ${email}:`, updateErr.message);
+                        return res.status(500).json({ error: 'Error updating user in database' });
                     }
-                    console.log(`Updated user: ${email} (New Source: ${updatedSource})`);
+                    console.log(`SUCCESS: Updated user: ${email} (New Source: ${updatedSource})`);
                     res.status(200).json({ success: true, message: 'User updated', source: updatedSource });
                 }
             );
@@ -106,9 +114,10 @@ app.post('/api/lead', (req, res) => {
                 [fullName, email, country, mt5Account, phone, source],
                 function (insertErr) {
                     if (insertErr) {
-                        return res.status(500).json({ error: 'Error inserting user' });
+                        console.error(`INSERT ERROR for ${email}:`, insertErr.message);
+                        return res.status(500).json({ error: 'Error inserting user into database' });
                     }
-                    console.log(`Created new user: ${email} (Source: ${source})`);
+                    console.log(`SUCCESS: Created new user: ${email} (Source: ${source})`);
                     res.status(201).json({ success: true, message: 'User created' });
                 }
             );

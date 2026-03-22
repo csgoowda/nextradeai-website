@@ -13,7 +13,8 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '.'))); 
 
 // Initialize SQLite database
-const dbPath = path.resolve(__dirname, 'database.sqlite');
+const dataDir = process.env.DATA_DIR || __dirname;
+const dbPath = path.resolve(dataDir, 'database.sqlite');
 const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
         console.error('Error opening database', err.message);

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NexTradeAI | Admin DB Viewer</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { padding: 40px; background: var(--navy); color: white; display: block; overflow-y: auto;}
+        .admin-card { background: rgba(6, 20, 40, .55); padding: 30px; border-radius: var(--r-m); border: 1px solid var(--glass-b); backdrop-filter: var(--blur); overflow-x: auto;}
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px;}
+        th, td { padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: left; }
+        th { background: rgba(0, 212, 160, 0.1); color: var(--green); text-transform: uppercase; font-size: 11px; letter-spacing: 0.1em;}
+        tr:hover { background: rgba(255,255,255,0.02); }
+        .source-tag { background: rgba(245, 200, 66, 0.15); color: var(--gold); padding: 4px 10px; border-radius: 20px; font-weight: 600; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <h2 class="h2">Database <span class="grad">Admin Panel</span></h2>
+        <p class="muted" style="margin-bottom:30px;">This directly reads your SQLite database behind the scenes so you can see exactly how it works and what data is gathered.</p>
+        
+        <div class="admin-card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Country</th>
+                        <th>Phone</th>
+                        <th>MT5 Account</th>
+                        <th>Source</th>
+                        <th>Date Registered</th>
+                    </tr>
+                </thead>
+                <tbody id="userTable">
+                    <tr><td colspan="8" style="text-align:center;">Loading database records...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        fetch('http://localhost:3000/api/admin/data')
+            .then(res => res.json())
+            .then(data => {
+                const tbody = document.getElementById('userTable');
+                if (data.users && data.users.length > 0) {
+                    tbody.innerHTML = data.users.map(u => `
+                        <tr>
+                            <td>#${u.id}</td>
+                            <td style="font-weight: 600;">${u.fullName}</td>
+                            <td>${u.email}</td>
+                            <td>${u.country}</td>
+                            <td>${u.phone}</td>
+                            <td style="color: var(--cyan);">${u.mt5Account}</td>
+                            <td><span class="source-tag">${u.source}</span></td>
+                            <td><span class="muted">${new Date(u.created_at).toLocaleString()}</span></td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 30px;">No users in the database yet. Go submit the form!</td></tr>';
+                }
+            })
+            .catch(err => {
+                document.getElementById('userTable').innerHTML = '<tr><td colspan="8" style="text-align:center; color:#ff6b6b; padding: 30px;">Error connecting to the Node.js server. Please make sure node server.js is running.</td></tr>';
+            });
+    </script>
+</body>
+</html>

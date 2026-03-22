@@ -38,7 +38,8 @@
                 <li><a href="#faq">FAQ</a></li>
             </ul>
             <div class="nav-right">
-                <a href="#demo" class="btn btn-glow btn-sm">Try For Free</a>
+                <a href="#demo" class="btn btn-ghost btn-sm">Try For Free</a>
+                <a href="#buy" class="btn btn-glow btn-sm">Buy Now</a>
                 <button class="mobile-toggle" id="menuToggle">
                     <i data-lucide="menu"></i>
                 </button>
@@ -220,17 +221,55 @@
                         <div class="demo-form-inner">
                             <div class="dash-shell" style="padding: 30px; background: rgba(0,0,0,0.3);">
                                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                                    <input type="text" placeholder="Full Name"
-                                        style="background: rgba(255,255,255,0.05); border:1px solid var(--white-10); padding: 12px; border-radius: 8px; color: white;">
-                                    <input type="email" placeholder="Email Address"
-                                        style="background: rgba(255,255,255,0.05); border:1px solid var(--white-10); padding: 12px; border-radius: 8px; color: white;">
-                                    <input type="text" placeholder="Country"
-                                        style="background: rgba(255,255,255,0.05); border:1px solid var(--white-10); padding: 12px; border-radius: 8px; color: white;">
-                                    <input type="text" placeholder="MT5 Account #"
-                                        style="background: rgba(255,255,255,0.05); border:1px solid var(--white-10); padding: 12px; border-radius: 8px; color: white;">
+                                    <input type="text" id="trialName" placeholder="Full Name"
+                                        style="background: rgba(255,255,255,0.05); border:1px solid var(--white-10); padding: 12px; border-radius: 8px; color: white;" required>
+                                    <input type="email" id="trialEmail" placeholder="Email Address"
+                                        style="background: rgba(255,255,255,0.05); border:1px solid var(--white-10); padding: 12px; border-radius: 8px; color: white;" required>
+                                    <input type="text" id="trialCountry" placeholder="Country"
+                                        style="background: rgba(255,255,255,0.05); border:1px solid var(--white-10); padding: 12px; border-radius: 8px; color: white;" required>
+                                    <input type="tel" id="trialPhone" placeholder="Phone Number"
+                                        style="background: rgba(255,255,255,0.05); border:1px solid var(--white-10); padding: 12px; border-radius: 8px; color: white;" required>
+                                    <input type="text" id="trialMt5" placeholder="MT5 Account #"
+                                        style="grid-column: span 2; background: rgba(255,255,255,0.05); border:1px solid var(--white-10); padding: 12px; border-radius: 8px; color: white;" required>
                                 </div>
                                 <button class="btn btn-glow" id="trialBtn" style="width:100%; margin-top:20px;"
-                                    onclick="submitTrial()">Start My Free Trial</button>
+                                    onclick="submitTrial(event)">Start My Free Trial</button>
+                                <p id="trialError" style="color: #ff6b6b; margin-top: 10px; font-size: 14px; text-align: center; display: none;">Please fill all required fields.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Buy Section -->
+    <section class="sec" id="buy">
+        <div class="wrap">
+            <div class="traders-card reveal" style="background: rgba(0, 212, 160, 0.05); border: 1px solid rgba(0, 212, 160, 0.2);">
+                <div class="demo-layout">
+                    <div>
+                        <h2 class="h2">Get Lifetime <span class="grad">Access</span></h2>
+                        <p class="muted">Purchase your NexTradeAI commercial license and start transforming your trading instantly.</p>
+                    </div>
+                    <div class="demo-form-col">
+                        <div class="demo-form-inner">
+                            <div class="dash-shell" style="padding: 30px; background: rgba(0,0,0,0.3);">
+                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                    <input type="text" id="buyName" placeholder="Full Name"
+                                        style="background: rgba(255,255,255,0.05); border:1px solid var(--white-10); padding: 12px; border-radius: 8px; color: white;" required>
+                                    <input type="email" id="buyEmail" placeholder="Email Address"
+                                        style="background: rgba(255,255,255,0.05); border:1px solid var(--white-10); padding: 12px; border-radius: 8px; color: white;" required>
+                                    <input type="text" id="buyCountry" placeholder="Country"
+                                        style="background: rgba(255,255,255,0.05); border:1px solid var(--white-10); padding: 12px; border-radius: 8px; color: white;" required>
+                                    <input type="tel" id="buyPhone" placeholder="Phone Number"
+                                        style="background: rgba(255,255,255,0.05); border:1px solid var(--white-10); padding: 12px; border-radius: 8px; color: white;" required>
+                                    <input type="text" id="buyMt5" placeholder="MT5 Account #"
+                                        style="grid-column: span 2; background: rgba(255,255,255,0.05); border:1px solid var(--white-10); padding: 12px; border-radius: 8px; color: white;" required>
+                                </div>
+                                <button class="btn btn-glow" id="buyBtn" style="width:100%; margin-top:20px; background: var(--green); color: black;"
+                                    onclick="submitBuy(event)">Buy Now</button>
+                                <p id="buyError" style="color: #ff6b6b; margin-top: 10px; font-size: 14px; text-align: center; display: none;">Please fill all required fields.</p>
                             </div>
                         </div>
                     </div>
